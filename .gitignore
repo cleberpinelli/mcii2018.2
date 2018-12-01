@@ -40,3 +40,5 @@ rsconnect/
 
 # only rar file, not txt.
 /*.txt
+
+/data
