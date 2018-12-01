@@ -1,6 +1,7 @@
 const fs = require('fs');
 const readline = require('readline');
 const _ = require('lodash');
+const winston = require('winston');
 
 let file = fs.createReadStream("../data/saida mq faure.txt");
 
@@ -9,14 +10,17 @@ const reader = readline.createInterface({
 });
 
 const formataLinha = function(obj){
-    return `${obj.tipoGerador};${obj.nomeInstancia};${obj.numeroCiclo};${obj.tempoExecucao};${obj.valor};${obj.restarts};${obj.melhorRestart}`;
+    return `${obj.tipoGerador};${obj.nomeInstancia};${obj.numeroCiclo};${obj.tempoExecucao};${obj.valor};${obj.restarts};${obj.melhorRestart}\r\n`;
 }
 
 const criarArquivo = function(dados){
     _.forEach(dados, (obj)=>{
 
         let nomeArquivo = obj.tipo;
-        fs.createWriteStream(`./dados/${nomeArquivo}_${new Date().getTime()}`);
+        let writeStream = fs.createWriteStream(`./dados/${nomeArquivo}_${new Date().getTime()}`);
+        _.forEach(obj.value,(T)=>{
+            writeStream.write(formataLinha(T));
+        });
     })
 }
 
